@@ -1,6 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using WebBimba.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<AppBimbaDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("MyConnectionDB")));
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
