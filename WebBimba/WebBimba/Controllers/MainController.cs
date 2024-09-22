@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebBimba.Data;
+using WebBimba.Data.Entities;
 using WebBimba.Models.Category;
 
 namespace WebBimba.Controllers
@@ -34,7 +35,7 @@ namespace WebBimba.Controllers
         [HttpPost] //це означає, що ми отримуємо дані із форми від клієнта
         public IActionResult Create(CategoryCreateViewModel model)
         {
-            
+            var entity = new CategoryEntity();
             //Збережння в Базу даних інформації
             var dirName = "uploading";
             var dirSave = Path.Combine(_environment.WebRootPath, dirName);
@@ -51,9 +52,14 @@ namespace WebBimba.Controllers
                 var saveFile = Path.Combine(dirSave, fileName);
                 using (var stream = new FileStream(saveFile, FileMode.Create)) 
                     model.Photo.CopyTo(stream);
+                entity.Image = fileName;
             }
-            //Те що ми отримали те і повертаємо назад
-            return View(model);
+            entity.Name = model.Name;
+            entity.Description = model.Description;
+            _dbContext.Categories.Add(entity);
+            _dbContext.SaveChanges();
+            //Переходимо до списку усіх категорій, тобото визиваємо метод Index нашого контролера
+            return Redirect("/");
         }
     }
 }
