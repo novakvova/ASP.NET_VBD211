@@ -7,11 +7,14 @@ namespace WebBimba.Controllers
     public class MainController : Controller
     {
         private readonly AppBimbaDbContext _dbContext;
-
+        //Зберігає різну інформацію про MVC проект
+        private readonly IWebHostEnvironment _environment;
         //DI - Depencecy Injection
-        public MainController(AppBimbaDbContext context)
+        public MainController(AppBimbaDbContext context,
+            IWebHostEnvironment environment)
         {
             _dbContext = context;
+            _environment = environment;
         }
 
         //метод у контролері називаться - action - дія
@@ -31,8 +34,24 @@ namespace WebBimba.Controllers
         [HttpPost] //це означає, що ми отримуємо дані із форми від клієнта
         public IActionResult Create(CategoryCreateViewModel model)
         {
+            
             //Збережння в Базу даних інформації
-
+            var dirName = "uploading";
+            var dirSave = Path.Combine(_environment.WebRootPath, dirName);
+            if (!Directory.Exists(dirSave))
+            {
+                Directory.CreateDirectory(dirSave);
+            }
+            if(model.Photo!=null)
+            {
+                //унікальне значенн, яке ніколи не повториться
+                string fileName = Guid.NewGuid().ToString();
+                var ext = Path.GetExtension(model.Photo.FileName);
+                fileName += ext;
+                var saveFile = Path.Combine(dirSave, fileName);
+                using (var stream = new FileStream(saveFile, FileMode.Create)) 
+                    model.Photo.CopyTo(stream);
+            }
             //Те що ми отримали те і повертаємо назад
             return View(model);
         }
