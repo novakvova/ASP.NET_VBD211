@@ -44,12 +44,18 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            var modalDelete = new bootstrap.Modal(document.getElementById('modalDelete'));
+
             var buttonsDelete = document.querySelectorAll('[data-delete]');
+
             console.log("Loading app", buttonsDelete);
             buttonsDelete.forEach(btn => {
-                btn.addEventListener("click", function (event) => {
+                btn.addEventListener("click", function (event) {
                     event.preventDefault();
-                }
+                    var id = this.getAttribute('data-delete');
+                    console.log("Delete id", id);
+                    modalDelete.show();
+                });
             });
         });
     </script>
