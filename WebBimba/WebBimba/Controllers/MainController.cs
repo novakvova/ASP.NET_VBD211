@@ -71,6 +71,15 @@ namespace WebBimba.Controllers
             {
                 return NotFound();
             }
+
+            if (!string.IsNullOrEmpty(category.Image))
+            {
+                var dirName = "uploading";
+                var fileSave = Path.Combine(_environment.WebRootPath, dirName, category.Image);
+                if (System.IO.File.Exists(fileSave)) 
+                    System.IO.File.Delete(fileSave);
+            }
+            
             _dbContext.Categories.Remove(category);
             _dbContext.SaveChanges();
 
