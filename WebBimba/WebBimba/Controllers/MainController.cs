@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebBimba.Data;
 using WebBimba.Data.Entities;
+using WebBimba.Interfaces;
 using WebBimba.Models.Category;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -9,14 +10,16 @@ namespace WebBimba.Controllers
     public class MainController : Controller
     {
         private readonly AppBimbaDbContext _dbContext;
+        private readonly IImageWorker _imageWorker;
         //Зберігає різну інформацію про MVC проект
         private readonly IWebHostEnvironment _environment;
         //DI - Depencecy Injection
         public MainController(AppBimbaDbContext context,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment, IImageWorker imageWorker)
         {
             _dbContext = context;
             _environment = environment;
+            _imageWorker = imageWorker;
         }
 
         //метод у контролері називаться - action - дія
@@ -74,12 +77,8 @@ namespace WebBimba.Controllers
 
             if (!string.IsNullOrEmpty(category.Image))
             {
-                var dirName = "uploading";
-                var fileSave = Path.Combine(_environment.WebRootPath, dirName, category.Image);
-                if (System.IO.File.Exists(fileSave)) 
-                    System.IO.File.Delete(fileSave);
+                _imageWorker.Delete(category.Image);
             }
-            
             _dbContext.Categories.Remove(category);
             _dbContext.SaveChanges();
 

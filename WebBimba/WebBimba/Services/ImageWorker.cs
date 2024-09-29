@@ -1,17 +1,20 @@
-﻿using WebBimba.Interfaces;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using WebBimba.Interfaces;
 
 namespace WebBimba.Services
 {
     public class ImageWorker : IImageWorker
     {
         private readonly IWebHostEnvironment _environment;
+        private const string dirName = "uploading";
+        private int[] sizes = [50, 150, 300, 600, 1200];
         public ImageWorker(IWebHostEnvironment environment)
         {
             _environment = environment;
         }
         public string Save(string url)
         {
-            string imageName = Guid.NewGuid().ToString() + ".jpg";
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -24,14 +27,7 @@ namespace WebBimba.Services
                     {
                         // Read the image bytes from the response content
                         byte[] imageBytes = response.Content.ReadAsByteArrayAsync().Result;
-                        var dirName = "uploading";
-                        var dirSave = Path.Combine(_environment.WebRootPath, dirName);
-                        if (!Directory.Exists(dirSave))
-                        {
-                            Directory.CreateDirectory(dirSave);
-                        }
-                        var path = Path.Combine(dirSave, imageName);
-                        File.WriteAllBytes(path, imageBytes);
+                        return CompresImage(imageBytes);
                     }
                     else
                     {
@@ -45,7 +41,50 @@ namespace WebBimba.Services
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 return String.Empty;
             }
+        }
+
+        /// <summary>
+        /// Стискаємо фото
+        /// </summary>
+        /// <param name="bytes">Набір байтів фото</param>
+        /// <returns>Повертаємо назву збереженого фото</returns>
+        private string CompresImage(byte[] bytes)
+        {
+            string imageName = Guid.NewGuid().ToString() + ".webp";
+            
+            var dirSave = Path.Combine(_environment.WebRootPath, dirName);
+            if (!Directory.Exists(dirSave))
+            {
+                Directory.CreateDirectory(dirSave);
+            }
+
+            
+            foreach (int size in sizes)
+            {
+                var path = Path.Combine(dirSave, $"{size}_{imageName}");
+                using (var image = Image.Load(bytes))
+                {
+                    image.Mutate(x => x.Resize(new ResizeOptions
+                    {
+                        Size = new Size(size, size),
+                        Mode = ResizeMode.Max
+                    }));
+                    image.SaveAsWebp(path);
+                    //image.Save(path, new WebpEncoder()); // Save the resized image
+                }
+            }
+
             return imageName;
+        }
+
+        public void Delete(string fileName)
+        {
+            foreach (int size in sizes)
+            {
+                var fileSave = Path.Combine(_environment.WebRootPath, dirName, $"{size}_{fileName}");
+                if (File.Exists(fileSave))
+                    File.Delete(fileSave);
+            }
         }
     }
 }
