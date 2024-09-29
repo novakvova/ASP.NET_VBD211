@@ -2,6 +2,7 @@
 using WebBimba.Data;
 using WebBimba.Data.Entities;
 using WebBimba.Models.Category;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebBimba.Controllers
 {
@@ -60,6 +61,20 @@ namespace WebBimba.Controllers
             _dbContext.SaveChanges();
             //Переходимо до списку усіх категорій, тобото визиваємо метод Index нашого контролера
             return Redirect("/");
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var category = _dbContext.Categories.Find(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            _dbContext.Categories.Remove(category);
+            _dbContext.SaveChanges();
+
+            return Json(new { text="Ми його видалили" }); // Вертаю об'єкт у відповідь
         }
     }
 }

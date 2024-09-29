@@ -7,7 +7,7 @@
     <div class="row">
         @foreach (var item in Model)
         {
-            <div class="col-md-3">
+            <div class="col-md-3" id="@("ProductItem"+@item.Id)">
                 <div class="card" style="width: 100%;">
                     <img src="/uploading/@item.Image" class="card-img-top">
                     <div class="card-body">
@@ -34,7 +34,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
-                <button type="button" class="btn btn-primary">Підтвердити</button>
+                <button type="button" class="btn btn-primary" id="deleteYes">Підтвердити</button>
             </div>
         </div>
     </div>
@@ -42,6 +42,7 @@
 
 
 @section Scripts {
+    <script src="/lib/axios/axios.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             var modalDelete = new bootstrap.Modal(document.getElementById('modalDelete'));
@@ -49,18 +50,26 @@
             var buttonsDelete = document.querySelectorAll('[data-delete]');
             var categoryName = document.getElementById("categoryName");
             var idDelete = 0;
-            //console.log("Loading app", buttonsDelete);
             buttonsDelete.forEach(btn => {
                 btn.addEventListener("click", function (event) {
                     event.preventDefault();
                     var id = this.getAttribute('data-delete');
                     var name = this.getAttribute('data-name');
-                    //console.log("Delete id", id);
-                    //console.log("Delete name", name);
                     idDelete = id;
                     categoryName.innerHTML = name;
                     modalDelete.show();
                 });
+            });
+
+            document.getElementById("deleteYes").addEventListener("click", () => {
+                console.log("Delete by id", idDelete);
+                //Виконуємо асинхроний запит на сервер через JavaScript
+                axios.post("/Main/Delete/" + idDelete)
+                    .then(res => { //Очікуємо результат від сервера
+                        //Після успішного видалення перегружаємо сторінку
+                        window.location.reload();
+                        //console.log("Усішно видалили");
+                    });
             });
         });
     </script>
