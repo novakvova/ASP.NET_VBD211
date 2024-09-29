@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<div class="modal" id="modalDelete" tabindex="-1" role="dialog">
+@* <div class="modal" id="modalDelete" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -39,7 +39,26 @@
             </div>
         </div>
     </div>
+</div> *@
+
+<div class="modal" id="modalDelete" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ви дійсно бажаєте видалити</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Буде проведено видалення <span id="categoryName"></span>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                <button type="button" class="btn btn-primary">Підтвердити</button>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 @section Scripts {
     <script>
@@ -48,12 +67,12 @@
 
             var buttonsDelete = document.querySelectorAll('[data-delete]');
 
-            console.log("Loading app", buttonsDelete);
+            //console.log("Loading app", buttonsDelete);
             buttonsDelete.forEach(btn => {
                 btn.addEventListener("click", function (event) {
                     event.preventDefault();
                     var id = this.getAttribute('data-delete');
-                    console.log("Delete id", id);
+                    //console.log("Delete id", id);
                     modalDelete.show();
                 });
             });
