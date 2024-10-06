@@ -60,7 +60,7 @@ using (var serviceScope = app.Services.CreateScope())
             "що продаЇтьс€ на прилавках супермаркет≥в твердий сир Ц не€к≥сний."
         };
 
-        imageName = imageWorker.Save("https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Assorted_bread.jpg/420px-Assorted_bread.jpg");
+        imageName = imageWorker.Save("https://st4.depositphotos.com/13194036/20537/i/450/depositphotos_205373732-stock-photo-young-african-american-female-shop.jpg");
         var bread = new CategoryEntity
         {
             Name = "’л≥б",
