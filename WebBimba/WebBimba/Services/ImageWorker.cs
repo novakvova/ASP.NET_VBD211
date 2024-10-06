@@ -1,5 +1,7 @@
-﻿using SixLabors.ImageSharp;
+﻿using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using System;
 using WebBimba.Interfaces;
 
 namespace WebBimba.Services
@@ -84,6 +86,24 @@ namespace WebBimba.Services
                 var fileSave = Path.Combine(_environment.WebRootPath, dirName, $"{size}_{fileName}");
                 if (File.Exists(fileSave))
                     File.Delete(fileSave);
+            }
+        }
+
+        public string Save(IFormFile file)
+        {
+            try
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    file.CopyTo(memoryStream);
+                    byte[] imageBytes = memoryStream.ToArray();
+                    return CompresImage(imageBytes);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return String.Empty;
             }
         }
     }
