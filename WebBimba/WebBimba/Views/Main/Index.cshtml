@@ -7,9 +7,26 @@
     <div class="row">
         @foreach (var item in Model)
         {
-            <div class="col-md-3" id="@("ProductItem"+@item.Id)">
+            <div class="col-6 col-sm-6 col-lg-4 col-xl-3" id="@("ProductItem"+@item.Id)">
                 <div class="card" style="width: 100%;">
-                    <img src="/uploading/300_@item.Image" class="card-img-top">
+
+                    <picture>
+                        <!-- Image for screens 1280px and above -->
+                        <source media="(min-width: 1280px)" srcset="/uploading/600_@item.Image">
+
+                        <!-- Image for screens 992px and above -->
+                        <source media="(min-width: 992px)" srcset="/uploading/300_@item.Image">
+
+                        <!-- Image for screens 768px and above -->
+                        <source media="(min-width: 768px)" srcset="/uploading/600_@item.Image">
+
+                        <!-- Image for screens 360px and above -->
+                        <source media="(min-width: 360px)" srcset="/uploading/600_@item.Image">
+
+                        <!-- Fallback image if none of the above conditions match -->
+                        <img src="/uploading/300_@item.Image" class="card-img-top" alt="Responsive Image Example">
+                    </picture>
+
                     <div class="card-body">
                         <h5 class="card-title">@item.Name</h5>
                         <p class="card-text">@item.Description</p>
