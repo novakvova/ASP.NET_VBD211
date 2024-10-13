@@ -30,7 +30,7 @@ namespace WebBimba.Controllers
         //метод у контролері називаться - action - дія
         public IActionResult Index()
         {
-            var model = _dbContext.Categories
+            List<CategoryItemViewModel> model = _dbContext.Categories
                 .ProjectTo<CategoryItemViewModel>(_mapper.ConfigurationProvider)
                 .ToList();
             return View(model);
@@ -46,7 +46,7 @@ namespace WebBimba.Controllers
         [HttpPost] //це означає, що ми отримуємо дані із форми від клієнта
         public IActionResult Create(CategoryCreateViewModel model)
         {
-            var entity = new CategoryEntity();
+            var entity = _mapper.Map<CategoryEntity>(model);
             //Збережння в Базу даних інформації
             var dirName = "uploading";
             var dirSave = Path.Combine(_environment.WebRootPath, dirName);
@@ -65,8 +65,6 @@ namespace WebBimba.Controllers
                 //    model.Photo.CopyTo(stream);
                 entity.Image = _imageWorker.Save(model.Photo);
             }
-            entity.Name = model.Name;
-            entity.Description = model.Description;
             _dbContext.Categories.Add(entity);
             _dbContext.SaveChanges();
             //Переходимо до списку усіх категорій, тобото визиваємо метод Index нашого контролера

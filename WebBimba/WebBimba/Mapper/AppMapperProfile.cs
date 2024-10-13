@@ -9,6 +9,7 @@ namespace WebBimba.Mapper
         public AppMapperProfile()
         {
             CreateMap<CategoryEntity, CategoryItemViewModel>();
+            CreateMap<CategoryCreateViewModel, CategoryEntity>();
         }
     }
 }
