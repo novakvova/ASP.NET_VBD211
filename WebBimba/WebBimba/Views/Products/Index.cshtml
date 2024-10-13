@@ -10,22 +10,49 @@
             <div class="col-6 col-sm-6 col-lg-4 col-xl-3" id="@("ProductItem"+@item.Id)">
                 <div class="card" style="width: 100%;">
 
-                    <picture>
-                        <!-- Image for screens 1280px and above -->
-                        <source media="(min-width: 1280px)" srcset="/uploading/600_@item.Images[0]">
+                    <div id="carouselExampleIndicators_@item.Id" class="carousel slide">
+                        <div class="carousel-indicators">
+                            @for (int i = 0; i < item.Images.Count; i++)
+                            {
+                                <button type="button" data-bs-target="#carouselExampleIndicators_@item.Id" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
+                            }
+                        </div>
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < item.Images.Count; i++)
+                            {
+                                var imgItem = item.Images.ElementAt(i);
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <picture>
+                                        <!-- Image for screens 1280px and above -->
+                                        <source media="(min-width: 1280px)" srcset="/uploading/600_@imgItem">
 
-                        <!-- Image for screens 992px and above -->
-                        <source media="(min-width: 992px)" srcset="/uploading/300_@item.Images[0]">
+                                        <!-- Image for screens 992px and above -->
+                                        <source media="(min-width: 992px)" srcset="/uploading/300_@imgItem">
 
-                        <!-- Image for screens 768px and above -->
-                        <source media="(min-width: 768px)" srcset="/uploading/600_@item.Images[0]">
+                                        <!-- Image for screens 768px and above -->
+                                        <source media="(min-width: 768px)" srcset="/uploading/600_@imgItem">
 
-                        <!-- Image for screens 360px and above -->
-                        <source media="(min-width: 360px)" srcset="/uploading/600_@item.Images[0]">
+                                        <!-- Image for screens 360px and above -->
+                                        <source media="(min-width: 360px)" srcset="/uploading/600_@imgItem">
 
-                        <!-- Fallback image if none of the above conditions match -->
-                        <img src="/uploading/300_@item.Images[0]" class="card-img-top" alt="Responsive Image Example">
-                    </picture>
+                                        <!-- Fallback image if none of the above conditions match -->
+                                        <img src="/uploading/300_@imgItem" class="d-block w-100" alt="Responsive Image Example">
+                                    </picture>
+
+                                     @* <img src="/uploading/300_@imgItem" class="d-block w-100" alt="..."> *@
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators_@item.Id" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators_@item.Id" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
 
                     <div class="card-body">
                         <h5 class="card-title">@item.Name</h5>
