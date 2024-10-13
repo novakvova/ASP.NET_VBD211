@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Mvc;
 using WebBimba.Data;
 using WebBimba.Data.Entities;
 using WebBimba.Interfaces;
@@ -13,19 +15,24 @@ namespace WebBimba.Controllers
         private readonly IImageWorker _imageWorker;
         //Зберігає різну інформацію про MVC проект
         private readonly IWebHostEnvironment _environment;
+        private readonly IMapper _mapper;
         //DI - Depencecy Injection
         public MainController(AppBimbaDbContext context,
-            IWebHostEnvironment environment, IImageWorker imageWorker)
+            IWebHostEnvironment environment, IImageWorker imageWorker,
+            IMapper mapper)
         {
             _dbContext = context;
             _environment = environment;
             _imageWorker = imageWorker;
+            _mapper = mapper;
         }
 
         //метод у контролері називаться - action - дія
         public IActionResult Index()
         {
-            var model = _dbContext.Categories.ToList();
+            var model = _dbContext.Categories
+                .ProjectTo<CategoryItemViewModel>(_mapper.ConfigurationProvider)
+                .ToList();
             return View(model);
         }
 

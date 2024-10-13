@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebBimba.Data;
 using WebBimba.Data.Entities;
 using WebBimba.Interfaces;
+using WebBimba.Mapper;
 using WebBimba.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<AppBimbaDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("MyConnectionDB")));
 
 builder.Services.AddScoped<IImageWorker, ImageWorker>();
+
+builder.Services.AddAutoMapper(typeof(AppMapperProfile));
 
 builder.Services.AddControllersWithViews();
 
