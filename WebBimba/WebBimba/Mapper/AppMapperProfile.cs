@@ -14,11 +14,14 @@ namespace WebBimba.Mapper
             CreateMap<CategoryCreateViewModel, CategoryEntity>();
 
             CreateMap<ProductEntity, ProductItemViewModel>()
-                .ForMember(x=>x.Images, opt => opt.MapFrom(p => p.ProductImages.Select(x=>x.Image).ToList()))
-                .ForMember(x=>x.CategoryName, opt=>opt.MapFrom(c => c.Category.Name));
+                .ForMember(x => x.Images, opt => opt.MapFrom(p => p.ProductImages.Select(x => x.Image).ToList()))
+                .ForMember(x => x.CategoryName, opt => opt.MapFrom(c => c.Category.Name));
 
-            CreateMap<ProductCreateViewModel, ProductEntity>()
-                .ForMember(x => x.Price, opt => opt.MapFrom(p => Decimal.Parse(p.Price, CultureInfo.InvariantCulture)));
+            //CreateMap<ProductCreateViewModel, ProductEntity>()
+            //    .ForMember(x => x.Price, opt => opt.MapFrom(p => 
+            //    {
+            //        return Decimal.Parse(p.Price, CultureInfo.InvariantCulture); 
+            //    }));
         }
     }
 }

@@ -74,10 +74,7 @@ namespace WebBimba.Controllers
         [HttpPost]
         public IActionResult Create(ProductCreateViewModel model)
         {
-            //var entity = _mapper.Map<ProductEntity>(model); // ПОМИЛКА з decimal
-
             var entity = _mapper.Map<ProductEntity>(model);
-
             // Збереження в Базу даних інформації   
             var dirName = "uploading";
             var dirSave = Path.Combine(_environment.WebRootPath, dirName);
@@ -88,8 +85,6 @@ namespace WebBimba.Controllers
             }
 
             entity.ProductImages = new List<ProductImageEntity>(); // Ініціалізуємо колекцію
-
-            var categories = _dbContext.Categories.ToList();
 
             if (model.Photos != null && model.Photos.Count > 0)
             {
@@ -103,15 +98,13 @@ namespace WebBimba.Controllers
                         {
                             Product = entity,
                             Image = _imageWorker.Save(photo),
-                            Priority = priority
+                            Priority = priority++
                         };
                         entity.ProductImages.Add(productImageEntity); // Додаємо до колекції
 
-                        priority++;
                     }
                 }
             }
-            entity.Category = categories[categories.Count - 1];
             _dbContext.Products.Add(entity);
             _dbContext.SaveChanges();
 
